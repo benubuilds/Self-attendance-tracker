@@ -1,0 +1,5 @@
+{
+  "name": "Self Attendance Tracker",
+  "description": "A simple and clean web app to track daily attendance and see statistics.",
+  "requestFramePermissions": []
+}
