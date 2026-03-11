@@ -215,12 +215,8 @@ export default function App() {
     while (day <= monthEnd) {
       const dateStr = format(day, 'yyyy-MM-dd');
       const dayData = attendance[dateStr];
-      let status = dayData?.status;
+      const status = dayData?.status;
       
-      if (!status && isWeekend(day)) {
-        status = 'week-off';
-      }
-
       if (status) {
         totalDays++;
         if (status === 'present') present++;
@@ -248,10 +244,7 @@ export default function App() {
     
     Object.entries(attendance).forEach(([dateStr, dayData]: [string, DayData]) => {
       const status = dayData.status;
-      if (!status && !isWeekend(new Date(dateStr))) return; // Skip if only note exists and not weekend
-      
-      const actualStatus = status || (isWeekend(new Date(dateStr)) ? 'week-off' : null);
-      if (!actualStatus) return;
+      if (!status) return; // Skip if no status
       
       const date = new Date(dateStr);
       const monthKey = format(date, 'yyyy-MM');
@@ -264,12 +257,12 @@ export default function App() {
       }
       
       grouped[monthKey].totalDays++;
-      if (actualStatus === 'present') grouped[monthKey].present++;
-      if (actualStatus === 'absent') grouped[monthKey].absent++;
-      if (actualStatus === 'half-day') grouped[monthKey].halfDay++;
-      if (actualStatus === 'leave') grouped[monthKey].leave++;
-      if (actualStatus === 'week-off') grouped[monthKey].weekOff++;
-      if (actualStatus === 'holiday') grouped[monthKey].holiday++;
+      if (status === 'present') grouped[monthKey].present++;
+      if (status === 'absent') grouped[monthKey].absent++;
+      if (status === 'half-day') grouped[monthKey].halfDay++;
+      if (status === 'leave') grouped[monthKey].leave++;
+      if (status === 'week-off') grouped[monthKey].weekOff++;
+      if (status === 'holiday') grouped[monthKey].holiday++;
     });
 
     return Object.values(grouped).sort((a, b) => b.month.localeCompare(a.month)).map(stat => {
